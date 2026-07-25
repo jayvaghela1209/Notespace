@@ -1,0 +1,10 @@
+services:
+  notespace:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - notespace:/app
+
+volumes:
+  notespace:

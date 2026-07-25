@@ -1,26 +1,107 @@
 {% extends "base.html" %}
 
-{% block title %}Notes{% endblock %}
+{% block title %}My Notes - NoteSpace{% endblock %}
 
 {% block content %}
-    <form action="{{ url_for('notes.notes') }}" method="POST">
-        <textarea name="note" placeholder="Enter your note here..."></textarea>
-        <button type="submit">Save Note</button>
-    </form>
-    
-    <div class="notes-container">
-        <h3>Your Notes:</h3>
+<div class="dashboard-wrapper">
+    <!-- Header Greeting & Quick Stats -->
+    <div class="dashboard-header">
+        <div class="welcome-title">
+            <h1>Workspace Dashboard</h1>
+            <p>Organize, search, and manage your personal notes with ease.</p>
+        </div>
+
+        <div class="stats-card">
+            <div class="stats-icon">
+                <i data-lucide="files" style="width: 22px; height: 22px;"></i>
+            </div>
+            <div class="stats-info">
+                <div class="stats-number" id="totalNotesCount">{{ notes|length }}</div>
+                <div class="stats-label">Total Notes</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create New Note Widget -->
+    <div class="create-note-card">
+        <div class="create-note-header">
+            <i data-lucide="plus-circle" style="color: var(--primary); width: 20px; height: 20px;"></i>
+            <span>Create New Note</span>
+        </div>
+
+        <form action="{{ url_for('notes.notes') }}" method="POST" id="createNoteForm">
+            <div class="note-textarea-wrapper">
+                <textarea 
+                    name="note" 
+                    id="noteTextarea" 
+                    class="note-textarea" 
+                    placeholder="Write your note content here..." 
+                    maxlength="200" 
+                    required></textarea>
+            </div>
+
+            <div class="create-note-footer">
+                <div class="char-counter">
+                    <i data-lucide="type" style="width: 14px; height: 14px;"></i>
+                    <span id="charCount">0 / 200</span>
+                </div>
+
+                <button type="submit" class="btn-primary btn-save-note">
+                    <i data-lucide="check" style="width: 16px; height: 16px;"></i>
+                    <span>Save Note</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Search & Filter Toolbar -->
+    <div class="toolbar-section">
+        <div class="search-box">
+            <i data-lucide="search" class="search-icon" style="width: 18px; height: 18px;"></i>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search notes by keyword...">
+            <button type="button" id="clearSearchBtn" class="btn-clear-search" aria-label="Clear search">
+                <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Notes Grid Container -->
+    <div class="notes-grid">
         {% if notes %}
             {% for note in notes %}
-                <div class="note-item">
-                    <p>{{ note.content }}</p>
-                    <form action="{{ url_for('notes.delete_note', note_id=note.id) }}" method="POST" style="display:inline;">
-                        <button type="submit" class="delete-btn">Delete</button>
-                    </form>
+                <div class="note-card" data-note-id="{{ note.id }}">
+                    <div class="note-content">{{ note.content }}</div>
+                    
+                    <div class="note-card-footer">
+                        <div class="note-meta">
+                            <i data-lucide="clock" style="width: 12px; height: 12px;"></i>
+                            <span>Note #{{ note.id }}</span>
+                        </div>
+
+                        <div class="note-actions">
+                            <button type="button" class="btn-icon-action btn-copy-note" title="Copy to clipboard">
+                                <i data-lucide="copy" style="width: 15px; height: 15px;"></i>
+                            </button>
+
+                            <form action="{{ url_for('notes.delete_note', note_id=note.id) }}" method="POST" style="display:inline;">
+                                <button type="button" class="btn-icon-action btn-delete btn-trigger-delete" title="Delete note">
+                                    <i data-lucide="trash-2" style="width: 15px; height: 15px;"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             {% endfor %}
-        {% else %}
-            <p>No notes yet. Add your first note!</p>
         {% endif %}
     </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="notesEmptyState" style="display: {% if not notes %}block{% else %}none{% endif %};">
+        <div class="empty-icon">
+            <i data-lucide="sticky-note" style="width: 32px; height: 32px;"></i>
+        </div>
+        <h3>No notes found</h3>
+        <p>Write your first note above to save thoughts, tasks, and ideas in your workspace.</p>
+    </div>
+</div>
 {% endblock %}

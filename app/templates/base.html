@@ -1,29 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Notes Workspace{% endblock %}</title>
     
-    <title>{% block title %}My App{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <header>
-        {% block header %}
-            <div class="contain">
-                <h2>Notes App</h2>
-                <a href="{{ url_for('auth.login') }}">Logout</a>
+    <div class="app-container">
+        <!-- Site Header -->
+        <header class="site-header">
+            <div class="nav-container">
+                <a href="{{ url_for('auth.home') }}" class="brand-logo">
+                    <div class="brand-icon">
+                        <i data-lucide="notebook-pen"></i>
+                    </div>
+                    <span class="brand-title">NoteSpace</span>
+                </a>
+
+                <div class="nav-actions">
+                    {% if session.get('user') %}
+                        <div class="user-badge">
+                            <div class="user-avatar">
+                                <i data-lucide="user" style="width: 14px; height: 14px;"></i>
+                            </div>
+                            <span>Active Session</span>
+                        </div>
+                        <a href="{{ url_for('auth.logout') }}" class="btn-nav-logout">
+                            <i data-lucide="log-out" style="width: 16px; height: 16px;"></i>
+                            <span>Logout</span>
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="btn-secondary" style="font-size: 0.85rem; padding: 0.45rem 0.9rem;">
+                            Login
+                        </a>
+                    {% endif %}
+                </div>
             </div>
-        {% endblock %}
-    </header>
+        </header>
 
-    {% block content %}
-    {% endblock %}
-
-    <footer>
-        {% block footer%}
-        <div class="contain">
-            <p>&copy; 2024 Notes App. All rights reserved.</p>
+        <!-- Flash Messages Data Store for JS Toasts -->
+        <div id="flashMessages" style="display: none;">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-data-item" data-category="{{ category }}" data-message="{{ message }}"></div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
         </div>
-        {% endblock %}
-    </footer>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Global Delete Confirmation Modal -->
+        <div class="modal-overlay" id="deleteModal" tabindex="-1">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <div class="modal-icon-warning">
+                        <i data-lucide="alert-triangle"></i>
+                    </div>
+                    <h3>Delete Note</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this note? This action is permanent and cannot be undone.</p>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="cancelDeleteBtn">Cancel</button>
+                    <button type="button" class="btn-danger" id="confirmDeleteBtn">Delete Note</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Site Footer -->
+        <footer class="site-footer">
+            <div class="footer-content">
+                <p>&copy; 2026 NoteSpace App. All rights reserved.</p>
+                <p>Designed with Glassmorphism & SaaS Aesthetics</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Frontend Engine JS -->
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    {% block extra_scripts %}{% endblock %}
 </body>
 </html>

@@ -19,7 +19,7 @@ def signup():
 
         existing_user = User.query.filter_by(username=username).first()
 
-        if existing_user and existing_user.password == password:
+        if existing_user:
             flash("User already exists. Please log in.", "error")
             return redirect(url_for('auth.signup'))
         

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found - NoteSpace{% endblock %}
+
+{% block content %}
+<div class="error-page-container">
+    <div class="error-code">404</div>
+    <h2 class="error-title">Page Not Found</h2>
+    <p class="error-desc">The page you are looking for doesn't exist, has been removed, or is temporarily unavailable.</p>
+    <a href="{{ url_for('auth.home') }}" class="btn-primary" style="width: auto; padding: 0.75rem 1.75rem;">
+        <i data-lucide="home" style="width: 18px; height: 18px;"></i>
+        <span>Return to Dashboard</span>
+    </a>
+</div>
+{% endblock %}
