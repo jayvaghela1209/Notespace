@@ -39,7 +39,7 @@ pipeline {
         stage('Deploy'){
             steps {
                 script {
-                    echo "Deploying the container"
+                    echo "Deploying the container...."
                     Deploy()
                 }
             }
