@@ -15,6 +15,12 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
     {% block extra_head %}{% endblock %}
 </head>
 <body>
@@ -30,6 +36,11 @@
                 </a>
 
                 <div class="nav-actions">
+                    <!-- Theme Switcher Toggle -->
+                    <button type="button" id="themeToggleBtn" class="btn-theme-toggle" aria-label="Toggle Theme" title="Switch Theme">
+                        <i data-lucide="moon" id="themeIcon" style="width: 18px; height: 18px;"></i>
+                    </button>
+
                     {% if session.get('user') %}
                         <div class="user-badge">
                             <div class="user-avatar">

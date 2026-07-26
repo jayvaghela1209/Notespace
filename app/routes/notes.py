@@ -15,6 +15,7 @@ def notes():
             db.session.add(new_note)
             db.session.commit()
             flash("note add successfully!!", 'success')
+        return redirect(url_for('notes.notes'))
     notes = Note.query.filter_by(user_id=session['user']).all()
     return render_template("notes.html", notes = notes)
 

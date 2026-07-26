@@ -3,6 +3,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initThemeToggle();
   initIcons();
   initToastEngine();
   initNoteCharacterCounter();
@@ -10,6 +11,39 @@ document.addEventListener('DOMContentLoaded', () => {
   initClipboardCopy();
   initDeleteModal();
 });
+
+/* 0. Theme Switcher Engine */
+function initThemeToggle() {
+  const toggleBtn = document.getElementById('themeToggleBtn');
+  if (!toggleBtn) return;
+
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  updateThemeIcon(currentTheme);
+
+  toggleBtn.addEventListener('click', () => {
+    const activeTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const nextTheme = activeTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', nextTheme);
+    localStorage.setItem('theme', nextTheme);
+    updateThemeIcon(nextTheme);
+    
+    if (typeof showToast === 'function') {
+      showToast(`Switched to ${nextTheme === 'dark' ? 'Dark' : 'Light'} theme`, 'info');
+    }
+  });
+}
+
+function updateThemeIcon(theme) {
+  const toggleBtn = document.getElementById('themeToggleBtn');
+  if (!toggleBtn) return;
+
+  const iconName = theme === 'light' ? 'sun' : 'moon';
+  toggleBtn.innerHTML = `<i data-lucide="${iconName}" id="themeIcon" style="width: 18px; height: 18px;"></i>`;
+  if (window.lucide) {
+    lucide.createIcons({ targets: [toggleBtn] });
+  }
+}
 
 /* Initialize Lucide Icons if loaded */
 function initIcons() {
