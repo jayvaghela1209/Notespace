@@ -1,9 +1,8 @@
 /**
- * NoteApp Frontend Interactivity Engine
+ * NoteSpace Frontend Interactivity Engine
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  initThemeToggle();
   initIcons();
   initToastEngine();
   initNoteCharacterCounter();
@@ -12,40 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDeleteModal();
 });
 
-/* 0. Theme Switcher Engine */
-function initThemeToggle() {
-  const toggleBtn = document.getElementById('themeToggleBtn');
-  if (!toggleBtn) return;
-
-  const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-  updateThemeIcon(currentTheme);
-
-  toggleBtn.addEventListener('click', () => {
-    const activeTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-    const nextTheme = activeTheme === 'dark' ? 'light' : 'dark';
-    
-    document.documentElement.setAttribute('data-theme', nextTheme);
-    localStorage.setItem('theme', nextTheme);
-    updateThemeIcon(nextTheme);
-    
-    if (typeof showToast === 'function') {
-      showToast(`Switched to ${nextTheme === 'dark' ? 'Dark' : 'Light'} theme`, 'info');
-    }
-  });
-}
-
-function updateThemeIcon(theme) {
-  const toggleBtn = document.getElementById('themeToggleBtn');
-  if (!toggleBtn) return;
-
-  const iconName = theme === 'light' ? 'sun' : 'moon';
-  toggleBtn.innerHTML = `<i data-lucide="${iconName}" id="themeIcon" style="width: 18px; height: 18px;"></i>`;
-  if (window.lucide) {
-    lucide.createIcons({ targets: [toggleBtn] });
-  }
-}
-
-/* Initialize Lucide Icons if loaded */
+/* Initialize Lucide Icons */
 function initIcons() {
   if (window.lucide) {
     lucide.createIcons();
@@ -65,7 +31,7 @@ function initToastEngine() {
 
     setTimeout(() => {
       createToast(container, message, category);
-    }, index * 200);
+    }, index * 150);
   });
 }
 
@@ -93,7 +59,6 @@ function createToast(container, message, category = 'info') {
     <button class="toast-close" aria-label="Close notification">
       <i data-lucide="x" style="width: 16px; height: 16px;"></i>
     </button>
-    <div class="toast-progress"></div>
   `;
 
   container.appendChild(toast);
@@ -154,7 +119,6 @@ function initLiveSearch() {
   const searchInput = document.getElementById('searchInput');
   const clearBtn = document.getElementById('clearSearchBtn');
   const noteCards = document.querySelectorAll('.note-card');
-  const notesGrid = document.querySelector('.notes-grid');
   const emptyState = document.getElementById('notesEmptyState');
   const totalCountBadge = document.getElementById('totalNotesCount');
 
