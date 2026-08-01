@@ -18,7 +18,7 @@ pipeline {
             steps {
                 script {
                     echo "This is building the code"
-                    BuildCode("notespace", "v1", "${env.dockerHubUser}")
+                    BuildCode("notespace", "v1", "jayvaghela0304")
                 }
             }
         }
